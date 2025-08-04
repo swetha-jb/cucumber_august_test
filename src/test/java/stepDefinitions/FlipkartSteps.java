@@ -6,7 +6,6 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import io.cucumber.java.en.*;
 import pages.FlipkartLoginPage;
 
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,23 +18,30 @@ public class FlipkartSteps {
 
     @Given("user is on Flipkart homepage")
     public void user_is_on_flipkart_homepage() {
-         ChromeOptions options = new ChromeOptions();
-   	 options.addArguments("--headless=new");
-   	 options.addArguments("--no-sandbox");
-   	 options.addArguments("--disable-dev-shm-usage");
-   	 options.addArguments("--disable-gpu");
-   	 options.addArguments("--remote-debugging-port=9222");
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless=new");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--disable-gpu");
+        options.addArguments("--remote-debugging-port=9222");
 
-	 try {
-        	Path tempProfileDir = Files.createTempDirectory("chrome-profile");
-        	options.addArguments("--user-data-dir=" + tempProfileDir.toAbsolutePath().toString());
-    } 	   catch (IOException e) {
-              throw new RuntimeException("Failed to create temporary user data directory", e);
-    }
-   	 driver = new ChromeDriver(options);
-   	 driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-   	 driver.get("https://www.flipkart.com/");
-   	 loginPage = new FlipkartLoginPage(driver);
+        try {
+            // ✅ Create a truly unique temp directory with timestamp
+            Path tempProfileDir = Files.createTempDirectory("chrome-profile-" + System.currentTimeMillis());
+
+            // ✅ Optional: log the created directory path for debugging
+            System.out.println("Using Chrome profile dir: " + tempProfileDir.toAbsolutePath());
+
+            // ✅ Use this directory as the Chrome user data directory
+            options.addArguments("--user-data-dir=" + tempProfileDir.toAbsolutePath().toString());
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to create temporary user data directory", e);
+        }
+
+        driver = new ChromeDriver(options);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        driver.get("https://www.flipkart.com/");
+        loginPage = new FlipkartLoginPage(driver);
     }
 
     @When("user closes the login popup")
@@ -50,3 +56,4 @@ public class FlipkartSteps {
         driver.quit();
     }
 }
+
