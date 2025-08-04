@@ -6,9 +6,6 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import io.cucumber.java.en.*;
 import pages.FlipkartLoginPage;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.Duration;
 
 public class FlipkartSteps {
@@ -19,14 +16,14 @@ public class FlipkartSteps {
     @Given("user is on Flipkart homepage")
     public void user_is_on_flipkart_homepage() {
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless=new");
+        options.addArguments("--headless"); // Use "--headless" instead of "--headless=new"
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
+
+        // Only use this if needed for CI debug
         options.addArguments("--disable-gpu");
-        options.addArguments("--remote-debugging-port=9222");
 
-
-
+        // DO NOT use --user-data-dir (it causes session conflict in Docker/CI)
         driver = new ChromeDriver(options);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         driver.get("https://www.flipkart.com/");
