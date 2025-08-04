@@ -25,18 +25,7 @@ public class FlipkartSteps {
         options.addArguments("--disable-gpu");
         options.addArguments("--remote-debugging-port=9222");
 
-        try {
-            // ✅ Create a truly unique temp directory with timestamp
-            Path tempProfileDir = Files.createTempDirectory("chrome-profile-" + System.currentTimeMillis());
 
-            // ✅ Optional: log the created directory path for debugging
-            System.out.println("Using Chrome profile dir: " + tempProfileDir.toAbsolutePath());
-
-            // ✅ Use this directory as the Chrome user data directory
-            options.addArguments("--user-data-dir=" + tempProfileDir.toAbsolutePath().toString());
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to create temporary user data directory", e);
-        }
 
         driver = new ChromeDriver(options);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
